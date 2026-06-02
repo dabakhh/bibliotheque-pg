@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+<!-- Cette page hérite de base.html — elle aura la navbar, le head, le footer automatiquement -->
+
+{% block titre %}Accueil{% endblock %}
+
+{% block contenu %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📖 Liste des livres</h2>
+    <a href="{{ url_for('ajouter') }}" class="btn btn-success">
+        ➕ Ajouter un livre
+    </a>
+</div>
+
+{# ─── CAS 1 : il y a des livres → afficher le tableau ─── #}
+{% if livres %}
+
+{# Résumé rapide #}
+    <p class="text-muted">
+        {{ livres|length }} livre(s) dans la bibliothèque
+        {# livres|length = le filtre Jinja2 "length" compte le nombre d'éléments dans la liste #}
+    </p>
+
+    <div class="table-responsive">
+        {# table-responsive = sur mobile le tableau aura un scroll horizontal #}
+
+        <table class="table table-striped table-hover align-middle">
+            {# table-striped = lignes alternées gris/blanc pour la lisibilité #}
+            {# table-hover = la ligne se colore quand tu passes la souris dessus #}
+            {# align-middle = contenu centré verticalement dans les cellules #}
+
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Année</th>
+                    <th>Disponible</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for livre in livres %}
+                {# On boucle sur chaque livre de la liste envoyée par Flask #}
+                <tr>
+                    <td class="text-muted">{{ livre.id }}</td>
+                    {#livre.id = accès à la clé 'id' du dictionnaire (grâce à dictionary=True) #}
+
+                    <td><strong>{{ livre.titre }}</strong></td>
+
+                    <td>{{ livre.auteur }}</td>
+
+                    <td>
+                        {% if livre.annee %}
+                            {{ livre.annee }}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                        {# Si l'année est NULL dans MySQL.. on affiche un tiret proprement #}
+                    </td>
+
+                    <td>
+                        {% if livre.disponible %}
+                            <span class="badge bg-success">✓ Disponible</span>
+                        {% else %}
+                            <span class="badge bg-danger">✗ Indisponible</span>
+                        {% endif %}
+                        {# badge = pastille colorée Bootstrap.. bg-success = vert.. bg-danger = rouge #}
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('detail', livre_id=livre.id) }}" 
+                           class="btn btn-sm btn-outline-info">
+                            🔍 Détail
+                        </a>                
+                        <a href="{{ url_for('supprimer', livre_id=livre.id) }}"
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Supprimer « {{ livre.titre }} » ? Cette action est irréversible.')">
+                            🗑️ Supprimer
+                        </a>                
+                        {# onclick confirm = fenêtre de confirmation native du navigateur #}
+                        {# retourne true si l'utilisateur clique OK.. false si Annuler #}
+                    </td>
+                </tr>
+                {% endfor %}
+                {# endfor = fin de la boucle — ne jamais l'oublier #}
+            </tbody>
+
+        </table>
+    </div>
+
+{# ─── CAS 2 : aucun livre → message informatif ─── #}
+{% else %}
+
+    <div class="alert alert-warning text-center py-5">
+        <h4>📭 Aucun livre dans la bibliothèque</h4>
+        <p>Commencez par ajouter votre premier livre !</p>
+        <a href="{{ url_for('accueil') }}" class="btn btn-success"> {#accueil sera remplacé par ajouter#}
+        </a>
+    </div>
+
+{% endif %}
+
+{% endblock %}

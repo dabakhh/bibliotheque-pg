@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block titre %}{{ livre.titre }}{% endblock %}
+
+{% block contenu %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <!-- Bouton retour en haut -->
+        <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary mb-4">
+            ← Retour à la liste
+        </a>
+
+        <!-- Carte de détail du livre -->
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-dark text-white py-3">
+                <h4 class="mb-0">📘 {{ livre.titre }}</h4>
+            </div>
+
+            <div class="card-body py-4">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th class="text-muted w-25">Auteur</th>
+                        <td>{{ livre.auteur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Année</th>
+                        <td>
+                            {{ livre.annee if livre.annee else "Non renseignée" }}
+                            <!-- Syntaxe Jinja2 condensée :
+                                 valeur_si_vrai if condition else valeur_si_faux -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Disponibilité</th>
+                        <td>
+                            {% if livre.disponible %}
+                                <span class="badge bg-success fs-6">✓ Disponible</span>
+                            {% else %}
+                                <span class="badge bg-danger fs-6">✗ Non disponible</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">ID</th>
+                        <td class="text-muted">{{ livre.id }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card-footer d-flex gap-2 bg-light">
+                <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary">
+                    ← Liste des livres
+                </a>
+                <a href="{{ url_for('supprimer', livre_id=livre.id) }}"
+                   class="btn btn-danger ms-auto"
+                   onclick="return confirm('Supprimer définitivement « {{ livre.titre }} » ?')">
+                    🗑️ Supprimer ce livre
+                </a>           
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

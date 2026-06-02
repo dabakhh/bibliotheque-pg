@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block titre %}Ajouter un livre{% endblock %}
+
+{% block contenu %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+        <h2 class="mb-4">➕ Ajouter un nouveau livre</h2>
+
+        <!-- ─── Affichage des erreurs de validation ─── -->
+        {% if erreurs %}
+        <div class="alert alert-danger">
+            <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+            <ul class="mb-0 mt-2">
+                {% for erreur in erreurs %}
+                <li>{{ erreur }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- ─── Le formulaire ─── -->
+        <!-- action="" = envoyer les données au MÊME URL (/ajouter) -->
+        <!-- method="post" = utiliser la méthode POST (données non visibles dans l'URL) -->
+        <form action="" method="post" novalidate>
+        <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
+
+            <!-- Champ Titre -->
+            <div class="mb-3">
+                <label for="titre" class="form-label fw-semibold">
+                    Titre <span class="text-danger">*</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="titre"
+                    name="titre"
+                    placeholder="Ex : Le Petit Prince"
+                    maxlength="200"
+                >
+                <!-- name="titre" DOIT correspondre exactement à request.form.get("titre") dans Flask -->
+                <div class="form-text">Maximum 200 caractères</div>
+            </div>
+
+            <!-- Champ Auteur -->
+            <div class="mb-3">
+                <label for="auteur" class="form-label fw-semibold">
+                    Auteur <span class="text-danger">*</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="auteur"
+                    name="auteur"
+                    placeholder="Ex : Antoine de Saint-Exupéry"
+                    maxlength="150"
+                >
+            </div>
+
+            <!-- Champ Année -->
+            <div class="mb-4">
+                <label for="annee" class="form-label fw-semibold">
+                    Année de publication
+                    <span class="text-muted fw-normal">(optionnel)</span>
+                </label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="annee"
+                    name="annee"
+                    placeholder="Ex : 1943"
+                    min="1000"
+                    max="2099"
+                >
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                    💾 Enregistrer le livre
+                </button>
+                <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary">
+                    ← Annuler et retourner à la liste
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
