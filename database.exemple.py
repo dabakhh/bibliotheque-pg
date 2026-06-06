@@ -20,3 +20,6 @@ def get_connection():
     )
     return connexion
     # On retourne la connexion pour pouvoir l'utiliser depuis app.py
+
+
+# Question recherche: fichier database.py dans les projets python doivent-ils être versionnés sur github ? (pour des raisons de sécurité)
